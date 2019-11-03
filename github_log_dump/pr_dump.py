@@ -9,8 +9,13 @@ def pr_dump(
         repository: Repository,
         progress_bar: bool = False,) -> dict:
 
+    pulls = repository.get_pulls(state="closed")
+
     if progress_bar:
-        bar = progressbar.ProgressBar(maxval=44, widgets=[progressbar.Percentage(), progressbar.Bar()]).start()
+        bar = progressbar.ProgressBar(
+            maxval=pulls.totalCount,
+            widgets=[progressbar.Percentage(), progressbar.Bar()]
+        ).start()
     else:
         bar = None
 

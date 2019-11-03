@@ -6,6 +6,12 @@ from github_log_dump.pr_dump import pr_dump
 class TestPRDump(TestCase):
     def setUp(self) -> None:
         self.repository = MagicMock()
+        self.pull_1 = MagicMock()
+        self.pull_2 = MagicMock()
+        self.pulls = MagicMock()
+        self.pulls.__iter__.return_value = [self.pull_1, self.pull_2]
+        self.pulls.totalCount = len(self.pulls.__iter__.return_value)
+        self.repository.get_pulls.return_value = self.pulls
 
     @patch("progressbar.ProgressBar")
     def test_when_progress_bar_is_unset_then_progress_bar_is_not_used(self, progress_bar):
