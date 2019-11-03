@@ -37,3 +37,22 @@ class TestPRDump(TestCase):
         self.pull_2.is_merged.return_value = False
         second_run = pr_dump(self.repository)
         self.assertEqual(len(initial_run) - 1, len(second_run))
+
+    @patch("github_log_dump.pr_dump._get_approved_reviews")
+    def test_when_include_reviewers_is_set_then_reviewers_are_included(self, get_reviews):
+        get_reviews.return_value = {
+            "username": "user",
+            "state": "APPROVED"
+        }
+        result = pr_dump(self.repository)
+        for entry in result:
+            self.assertEqual(get_reviews.return_value, entry["reviews"])
+
+    @patch("github_log_dump.pr_dump._get_approved_reviews")
+    def test_when_include_reviewers_is_unset_then_reviewers_are_excluded(self, get_reviews):
+        result = pr_dump(self.repository, include_reviewers=False)
+        # Ensure _get_approved_reviews is not called to save on API access
+        get_reviews.assert_not_called()
+        # Ensure "reviews" key does not exist in the output
+        for entry in result:
+            self.assertNotIn("reviews", entry)
