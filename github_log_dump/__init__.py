@@ -24,7 +24,8 @@ class UserPass:
 def github_log_dump(
         api_key: str = None,
         userpass: UserPass = None,) -> None:
-    pass
+    if (api_key is not None) == (userpass is not None):
+        raise RuntimeError("Exactly one of api_key and userpass parameters must be defined")
 
 
 def cmdline():
