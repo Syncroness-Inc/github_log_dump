@@ -1,7 +1,8 @@
 """
 Access to the Github API
 """
-from github import Github, Repository
+from github import Github
+from github.Repository import Repository
 from getpass import getpass
 
 
