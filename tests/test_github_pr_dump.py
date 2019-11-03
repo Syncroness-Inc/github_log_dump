@@ -56,3 +56,19 @@ class TestPRDump(TestCase):
         # Ensure "reviews" key does not exist in the output
         for entry in result:
             self.assertNotIn("reviews", entry)
+
+    @patch("github_log_dump.pr_dump._get_commit_hashes")
+    def test_when_include_commit_hashes_is_set_then_commits_are_included(self, get_commit_hashes):
+        get_commit_hashes.return_value = ["abc", "123", "DoReMe"]
+        result = pr_dump(self.repository)
+        for entry in result:
+            self.assertEqual(get_commit_hashes.return_value, entry["commits"])
+
+    @patch("github_log_dump.pr_dump._get_commit_hashes")
+    def test_when_include_commit_hashes_is_unset_then_commits_are_excluded(self, get_commit_hashes):
+        result = pr_dump(self.repository, include_commit_hashes=False)
+        # Ensure _get_approved_reviews is not called to save on API access
+        get_commit_hashes.assert_not_called()
+        # Ensure "reviews" key does not exist in the output
+        for entry in result:
+            self.assertNotIn("commits", entry)

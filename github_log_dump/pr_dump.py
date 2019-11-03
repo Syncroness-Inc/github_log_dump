@@ -78,5 +78,5 @@ def pr_dump(
     return pull_entries
 
 
-def cmdline():
-    pass
+if __name__ == "__main__":
+    print("Hello")

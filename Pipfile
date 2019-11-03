@@ -7,6 +7,7 @@ verify_ssl = true
 PyGithub="*"
 progressbar="*"
 coverage="*"
+PyYAML="*"
 
 [requires]
 python_version = "3.7"
