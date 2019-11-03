@@ -7,9 +7,15 @@ class TestPRDump(TestCase):
     def setUp(self) -> None:
         self.repository = MagicMock()
         self.pull_1 = MagicMock()
+        self.pull_1.is_merged.return_value = True
         self.pull_2 = MagicMock()
+        self.pull_2.is_merged.return_value = True
+
+        self.unmerged_pull = MagicMock()
+        self.unmerged_pull.is_merged.return_value = False
+
         self.pulls = MagicMock()
-        self.pulls.__iter__.return_value = [self.pull_1, self.pull_2]
+        self.pulls.__iter__.return_value = [self.pull_1, self.pull_2, self.unmerged_pull]
         self.pulls.totalCount = len(self.pulls.__iter__.return_value)
         self.repository.get_pulls.return_value = self.pulls
 
@@ -24,3 +30,10 @@ class TestPRDump(TestCase):
         progress_bar.assert_called()
         progress_bar().start.assert_called()
         progress_bar().start().finish.assert_called()
+
+    def test_when_pulls_are_not_merged_then_they_are_excluded_from_the_dump(self):
+        # Changing "self.pull_2.is_merged()" from "True" to "False" will decrease the length of our output by one
+        initial_run = pr_dump(self.repository)
+        self.pull_2.is_merged.return_value = False
+        second_run = pr_dump(self.repository)
+        self.assertEqual(len(initial_run) - 1, len(second_run))
