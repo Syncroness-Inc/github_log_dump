@@ -22,10 +22,14 @@ class UserPass:
 
 
 def github_log_dump(
-        api_key: str = None,
+        access_token: str = None,
         userpass: UserPass = None,) -> None:
-    if (api_key is not None) == (userpass is not None):
-        raise RuntimeError("Exactly one of api_key and userpass parameters must be defined")
+    if (access_token is not None) == (userpass is not None):
+        raise RuntimeError("Exactly one of access_token and userpass parameters must be defined")
+    if access_token is not None:
+        instance = Github(access_token)
+    else:
+        instance = Github(userpass.username, userpass.password)
 
 
 def cmdline():
