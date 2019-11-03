@@ -1,6 +1,6 @@
 from unittest import TestCase
-from unittest.mock import patch
-from github_log_dump.api_access import github_login, UserPass
+from unittest.mock import patch, MagicMock
+from github_log_dump.api_access import github_login, UserPass, get_repository
 
 
 class TestUserPass(TestCase):
@@ -12,6 +12,28 @@ class TestUserPass(TestCase):
         userpass = UserPass.new_cmdline()
         self.assertEqual(get_username.return_value, userpass.username)
         self.assertEqual(get_password.return_value, userpass.password)
+
+
+class TestGetRepo(TestCase):
+    def setUp(self) -> None:
+        self.test_instance = MagicMock()
+        self.available_repo = MagicMock
+        self.available_repo.name = "available_repo"
+        self.test_instance.get_user().get_repos.return_value = [self.available_repo]
+
+    def test_if_repo_name_is_not_available_then_raises_runtime_error(self):
+        repo_name = "unavailable_repo"
+        with self.assertRaises(RuntimeError):
+            get_repository(repo_name, self.test_instance)
+
+    def test_if_one_repo_with_matching_name_is_found_then_return_that_object(self):
+        repo = get_repository(self.available_repo.name, self.test_instance)
+        self.assertIs(self.available_repo, repo)
+
+    def test_if_multiple_repos_match_name_then_raises_runtime_error(self):
+        self.test_instance.get_user().get_repos.return_value.append(self.available_repo)
+        with self.assertRaises(RuntimeError):
+            get_repository(self.available_repo.name, self.test_instance)
 
 
 @patch('github_log_dump.api_access.Github')

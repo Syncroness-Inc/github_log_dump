@@ -32,10 +32,10 @@ setup(
     ],
     packages=find_packages(exclude=['tests']),  # Required
     python_requires='>=3.7, <4',
-    install_requires=['PyGithub', 'yaml', 'progressbar'],  # Optional
+    install_requires=['PyGithub', 'PyYAML', 'progressbar'],  # Optional
     entry_points={  # Optional
         'console_scripts': [
-            'github_pr_dump=github_log_dump:pr_dump:cmdline',
+            'github_pr_dump=github_log_dump:pr_dump',
         ],
     },
 )

@@ -2,6 +2,7 @@
 Access to the Github API
 """
 from github import Github
+from github.Repository import Repository
 from getpass import getpass
 
 
@@ -47,3 +48,18 @@ def github_login(
         instance = Github(userpass.username, userpass.password)
     return instance
 
+
+def get_repository(name: str, github_instance: Github) -> Repository:
+    """
+    Returns a matching Repository object based on the string, or raises a RuntimeError
+    if no match can be found
+    :param name:
+    :param github_instance:
+    :return:
+    """
+    matching_repos = [repo for repo in github_instance.get_user().get_repos() if repo.name == name]
+    if len(matching_repos) == 0:
+        raise RuntimeError(f"Cannot find a repository matching name '{name}'")
+    if len(matching_repos) > 1:
+        raise RuntimeError(f"Found too many repositories matching name '{name}'")
+    return matching_repos[0]
