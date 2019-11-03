@@ -30,6 +30,14 @@ def pr_dump(
         progress_bar: bool = False,
         include_reviewers: bool = True,
         include_commit_hashes: bool = True) -> List[dict]:
+    """
+    Dump the Pull Requests for the given repository as a list of dictionaries
+    :param repository:
+    :param progress_bar: Include a progress bar.  Useful for commandline operation
+    :param include_reviewers: Include a list of users who reviewed the PR
+    :param include_commit_hashes: Include commit hashes associated with the PR
+    :return:
+    """
     pulls = repository.get_pulls(state="closed")
 
     if progress_bar:
