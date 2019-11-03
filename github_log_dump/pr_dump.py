@@ -1,10 +1,8 @@
 """
 Dump github PR data to a dictionary
 """
-from .api_access import UserPass, github_login
+from github import Github
 
 
-def pr_dump(
-        access_token: str = None,
-        userpass: UserPass = None,) -> dict:
-    instance = github_login(access_token=access_token, userpass=userpass)
+def pr_dump(github_instance: Github) -> dict:
+    pass
