@@ -7,6 +7,8 @@ import progressbar
 from typing import List
 import argparse
 
+from github_log_dump.api_access import github_login, get_repository
+
 
 def _get_approved_reviews(pull: PullRequest) -> List[dict]:
     """
@@ -90,5 +92,11 @@ def pr_dump(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dump GitHub pull request data to usable formats.")
     parser.add_argument('repo', type=str, help="Name of the repository to dump")
+    parser.add_argument("--token", type=str, default=None, help="Use provided GitHub access token instead of user/pass")
 
     args = parser.parse_args()
+
+    instance = github_login(access_token=args.token, use_cmdline=True)
+    repo = get_repository(args.repo, instance)
+
+    print(pr_dump(repo, progress_bar=True))
