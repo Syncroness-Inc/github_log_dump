@@ -38,8 +38,15 @@ class UserPass:
 
 def github_login(
         access_token: str = None,
-        userpass: UserPass = None,) -> Github():
-    # Handle access_token and userpass input, create Github instance
+        userpass: UserPass = None,
+        use_cmdline: bool = False) -> Github():
+    """
+    Log in to github using the one of the provided parameters
+    :param access_token:
+    :param userpass:
+    :param use_cmdline: If true, prompts for a userpass on the cmdline if no credentials are provided
+    :return:
+    """
     if (access_token is not None) == (userpass is not None):
         raise RuntimeError("Exactly one of access_token and userpass parameters must be defined")
     if access_token is not None:

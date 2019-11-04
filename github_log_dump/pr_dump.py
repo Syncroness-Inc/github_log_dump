@@ -5,6 +5,7 @@ from github.Repository import Repository
 from github.PullRequest import PullRequest
 import progressbar
 from typing import List
+import argparse
 
 
 def _get_approved_reviews(pull: PullRequest) -> List[dict]:
@@ -87,4 +88,7 @@ def pr_dump(
 
 
 if __name__ == "__main__":
-    print("Hello")
+    parser = argparse.ArgumentParser(description="Dump GitHub pull request data to usable formats.")
+    parser.add_argument('repo', type=str, help="Name of the repository to dump")
+
+    args = parser.parse_args()
