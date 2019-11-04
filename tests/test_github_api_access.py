@@ -40,6 +40,7 @@ class TestGetRepo(TestCase):
 class TestGithubLogin(TestCase):
     def setUp(self) -> None:
         self.test_userpass = UserPass("username", "password")
+        self.cmdline_userpass = UserPass("cmdline", "cmdlinepass")
         self.test_access_token = "feedbeef"
 
     def test_when_no_access_token_or_userpass_is_provided_then_a_runtime_error_is_raised(self, mock_github):
@@ -58,3 +59,16 @@ class TestGithubLogin(TestCase):
     def test_when_userpass_is_provided_then_github_attempts_to_log_in_with_provided_userpass(self, mock_github):
         instance = github_login(userpass=self.test_userpass)
         self.assertEqual(mock_github(self.test_userpass.username, self.test_userpass.password), instance)
+
+    @patch("github_log_dump.api_access.UserPass.new_cmdline")
+    def test_when_use_cmdline_is_set_and_a_userpass_is_provided_then_provided_userpass_is_used(self, new_cmdline, mock_github):
+        new_cmdline.return_value = self.cmdline_userpass
+        instance = github_login(userpass=self.test_userpass, use_cmdline=True)
+        new_cmdline.assert_not_called()
+        self.assertEqual(mock_github(self.test_userpass.username, self.test_userpass.password), instance)
+
+    @patch("github_log_dump.api_access.UserPass.new_cmdline")
+    def test_when_use_cmdline_is_set_and_a_userpass_is_not_provided_then_provided_userpass_is_used(self, new_cmdline, mock_github):
+        new_cmdline.return_value = self.cmdline_userpass
+        instance = github_login(use_cmdline=True)
+        self.assertEqual(mock_github(self.cmdline_userpass.username, self.cmdline_userpass.password), instance)
