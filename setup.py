@@ -35,7 +35,7 @@ setup(
     install_requires=['PyGithub', 'PyYAML', 'progressbar'],  # Optional
     entry_points={  # Optional
         'console_scripts': [
-            'github_pr_dump=github_log_dump:pr_dump:cmdline',
+            'github_pr_dump=github_log_dump.pr_dump:cmdline',
         ],
     },
 )
