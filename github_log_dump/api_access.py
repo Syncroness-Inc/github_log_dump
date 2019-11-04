@@ -47,11 +47,15 @@ def github_login(
     :param use_cmdline: If true, prompts for a userpass on the cmdline if no credentials are provided
     :return:
     """
-    if (access_token is not None) == (userpass is not None):
-        raise RuntimeError("Exactly one of access_token and userpass parameters must be defined")
+    if userpass is not None and access_token is not None:
+        raise RuntimeError("Too many access parameters provided")
     if access_token is not None:
         instance = Github(access_token)
     else:
+        if userpass is None and use_cmdline:
+            userpass = UserPass.new_cmdline()
+        if userpass is None:
+            raise RuntimeError("No access parameters provided")
         instance = Github(userpass.username, userpass.password)
     return instance
 
