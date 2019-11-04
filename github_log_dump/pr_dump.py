@@ -89,7 +89,7 @@ def pr_dump(
     return pull_entries
 
 
-if __name__ == "__main__":
+def cmdline():
     parser = argparse.ArgumentParser(description="Dump GitHub pull request data to usable formats.")
     parser.add_argument('repo', type=str, help="Name of the repository to dump")
     parser.add_argument("--token", type=str, default=None, help="Use provided GitHub access token instead of user/pass")
@@ -100,3 +100,7 @@ if __name__ == "__main__":
     repo = get_repository(args.repo, instance)
 
     print(pr_dump(repo, progress_bar=True))
+
+
+if __name__ == "__main__":
+    cmdline()
