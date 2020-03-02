@@ -1,0 +1,19 @@
+dist: bionic
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+
+before_install:
+  - travis_retry pip install coverage codecov
+
+install:
+  - travis_retry pip install ".[test]"
+
+script:
+  - coverage run -m python unittest discover tests
+
+after_success:
+  - codecov
